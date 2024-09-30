@@ -7,28 +7,25 @@ let estrellas = 0;
 let recognition;
 
 // Función para generar cuentos usando OpenAI API
+const apiKey = process.env.OPENAI_API_KEY;
+
 async function generateStory() {
-    const prompt = "Genera una historia corta para niños sobre un animal aventurero.";
-    const response = await fetch('https://api.openai.com/v1/completions', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer `
-        },
-        body: JSON.stringify({
-            model: "text-davinci-003",
-            prompt: prompt,
-            max_tokens: 500
-        })
-    });
+  const response = await fetch('https://api.openai.com/v1/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: "text-davinci-003",
+      prompt: "Tell me a story",
+      max_tokens: 100,
+    }),
+  });
 
-    const data = await response.json();
-    const story = data.choices[0].text.trim();
-    tituloCuento.textContent = "Historia Generada por IA";
-    textoCuento.textContent = story;
-    feedback.textContent = "";
+  const result = await response.json();
+  console.log(result);
 }
-
 document.getElementById("generate-story").addEventListener('click', generateStory);
 
 // Web Speech API - Reconocimiento de Voz
