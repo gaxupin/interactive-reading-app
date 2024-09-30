@@ -1,60 +1,64 @@
-// Variables del DOM
-const tituloCuento = document.getElementById("titulo-cuento");
-const textoCuento = document.getElementById("texto-cuento");
-const feedback = document.getElementById("feedback");
-const progressBar = document.getElementById('progress-bar-fill');
-let recognition;
+// Elementos del DOM
+const selection = document.getElementById("selection");
+const gutenbergSelection = document.getElementById("gutenberg-selection");
+const aiSelection = document.getElementById("ai-selection");
+const gutenbergBookDiv = document.getElementById("gutenberg-book");
+const aiBookDiv = document.getElementById("ai-book");
+const storyType = document.getElementById("storyType");
+const protagonistName = document.getElementById("protagonistName");
+const setting = document.getElementById("setting");
+const genre = document.getElementById("genre");
 
-// Método para generar cuentos con IA (OpenAI API)
-async function generateStoryWithAI() {
-    try {
-        const response = await fetch('/api/generate-story', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                prompt: "Genera un cuento para niños sobre animales en el bosque."
-            })
-        });
-
-        const data = await response.json();
-        tituloCuento.textContent = "Cuento Generado con IA";
-        textoCuento.textContent = data.story;
-    } catch (error) {
-        console.error("Error al generar cuento con IA:", error);
-    }
-}
-
-// Método para obtener libros desde Project Gutenberg
-async function fetchBookFromGutenberg() {
-    try {
-        const response = await fetch('https://gutendex.com/books/?topic=children');
-        const data = await response.json();
-
-        // Selecciona un libro aleatorio de la respuesta
-        const randomBook = data.results[Math.floor(Math.random() * data.results.length)];
-        const bookText = await fetch(randomBook.formats['text/plain; charset=utf-8']);
-        const text = await bookText.text();
-
-        tituloCuento.textContent = randomBook.title;
-        textoCuento.textContent = text.slice(0, 1000); // Muestra solo las primeras 1000 palabras
-
-    } catch (error) {
-        console.error("Error al obtener libro de Project Gutenberg:", error);
-    }
-}
-
-// Lógica de selección de fuente del libro
-document.getElementById("generate-book").addEventListener('click', async function() {
-    const selectedOption = document.getElementById('book-selection').value;
-    
-    if (selectedOption === 'gutenberg') {
-        await fetchBookFromGutenberg();
-    } else if (selectedOption === 'ai') {
-        await generateStoryWithAI();
+// Mostrar/Ocultar opciones según la selección
+selection.addEventListener("change", (event) => {
+    const value = event.target.value;
+    if (value === "gutenberg") {
+        gutenbergSelection.classList.remove("hidden");
+        aiSelection.classList.add("hidden");
+    } else {
+        aiSelection.classList.remove("hidden");
+        gutenbergSelection.classList.add("hidden");
     }
 });
+
+// Implementar la carga desde Project Gutenberg con filtros
+document.getElementById("load-gutenberg").addEventListener("click", async () => {
+    const selectedGenre = genre.value;
+    const response = await fetch(`https://gutendex.com/books?topic=${selectedGenre}`);
+    const data = await response.json();
+
+    // Tomamos el primer libro para mostrarlo
+    const book = data.results[0];
+    const bookTitle = book.title;
+    const bookAuthor = book.authors[0].name;
+    const bookText = book.formats['text/plain'];
+
+    // Mostrar libro en el div
+    gutenbergBookDiv.innerHTML = `<h3>${bookTitle} - ${bookAuthor}</h3><p>${bookText}</p>`;
+});
+
+// Implementar la generación de cuentos con IA usando preguntas dinámicas
+async function generateStory() {
+    const selectedStoryType = storyType.value;
+    const protagonist = protagonistName.value || "El héroe";
+    const storySetting = setting.value || "un lugar mágico";
+
+    const prompt = `Escribe una historia de ${selectedStoryType} donde el protagonista sea ${protagonist} en ${storySetting}.`;
+
+    const response = await fetch('/api/generate-story', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt }),
+    });
+
+    const result = await response.json();
+    aiBookDiv.innerHTML = `<h3>Historia Generada</h3><p>${result.story}</p>`;
+}
+
+document.getElementById("generate-story").addEventListener('click', generateStory);
+
 
 // Web Speech API - Reconocimiento de voz para la lectura
 if ('webkitSpeechRecognition' in window) {
