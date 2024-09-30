@@ -3,24 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lectura Interactiva con IA</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Selección de Cuentos</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Lectura Interactiva</h1>
-        <button id="generate-story">Generar Historia con IA</button>
-        
-        <div id="lector">
-            <h2 id="titulo-cuento">Título del Cuento</h2>
-            <p id="texto-cuento"></p>
-            <button id="start-reading">Comenzar Lectura</button>
-            <p id="feedback"></p>
-        </div>
+    <h1>Elige un Cuento</h1>
 
-        <div id="recompensas">
-            <p>Estrellas ganadas: <span id="estrellas">0</span></p>
-        </div>
+    <label for="selection">Selecciona el origen del cuento:</label>
+    <select id="selection">
+        <option value="gutenberg">Cargar desde la base de datos</option>
+        <option value="ai">Generar con IA</option>
+    </select>
+
+    <!-- Filtros para Gutenberg -->
+    <div id="gutenberg-selection" class="option-container">
+        <h2>Libros de Project Gutenberg</h2>
+        <label for="genre">Selecciona un género:</label>
+        <select id="genre">
+            <option value="children">Infantil</option>
+            <option value="fiction">Ficción</option>
+            <option value="fantasy">Fantasía</option>
+        </select>
+        <button id="load-gutenberg">Cargar libro</button>
+        <div id="gutenberg-book"></div>
+    </div>
+
+    <!-- Preguntas para IA -->
+    <div id="ai-selection" class="option-container hidden">
+        <h2>Generar una historia con IA</h2>
+        
+        <!-- Preguntas dinámicas para la historia con IA -->
+        <label for="storyType">¿Qué tipo de historia quieres?</label>
+        <select id="storyType">
+            <option value="aventura">Aventura</option>
+            <option value="fantasia">Fantasía</option>
+            <option value="misterio">Misterio</option>
+        </select>
+
+        <label for="protagonistName">Nombre del protagonista:</label>
+        <input type="text" id="protagonistName" placeholder="Escribe un nombre">
+
+        <label for="setting">¿Dónde ocurre la historia?</label>
+        <input type="text" id="setting" placeholder="Lugar de la historia">
+
+        <button id="generate-story">Generar historia</button>
+        <div id="ai-book"></div>
     </div>
 
     <script src="script.js"></script>
