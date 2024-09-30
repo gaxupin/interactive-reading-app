@@ -6,31 +6,25 @@ const estrellasElem = document.getElementById("estrellas");
 let estrellas = 0;
 let recognition;
 
-// Función para generar cuentos usando el backend de Vercel
 async function generateStory() {
-  const response = await fetch('/api/generate-story', { // Llamada al backend de Vercel
+  const prompt = "Escribe una historia corta para niños.";
+
+  const response = await fetch('/api/generate-story', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      prompt: "Escribe una historia para niños sobre animales.", // Prompt enviado al backend
-    }),
+    body: JSON.stringify({ prompt: prompt }),  // Asegúrate de que el cuerpo tiene 'prompt'
   });
 
   const result = await response.json();
-  
-  // Si hay un error en la respuesta, lo mostramos
-  if (result.error) {
-    feedback.textContent = "Error generando la historia.";
-  } else {
-    // Mostrar el cuento generado en el DOM
-    textoCuento.textContent = result.story.trim();
-    feedback.textContent = "¡Historia generada!";
-  }
+  console.log(result);
+  // Mostrar la historia generada
+  document.getElementById("texto-cuento").innerText = result.story;
 }
 
 document.getElementById("generate-story").addEventListener('click', generateStory);
+
 
 // Web Speech API - Reconocimiento de Voz
 if ('webkitSpeechRecognition' in window) {
