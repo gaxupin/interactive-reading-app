@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lectura Interactiva</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Selecciona un cuento para leer</h1>
+        <ul id="libros">
+            <li>Caperucita Roja</li>
+            <li>Los Tres Cerditos</li>
+            <li>Blancanieves</li>
+        </ul>
+
+        <div id="lector">
+            <h2 id="titulo-cuento">Título del Cuento</h2>
+            <p id="texto-cuento"></p>
+            <button id="start-reading">Comenzar Lectura</button>
+            <p id="feedback"></p>
+        </div>
+
+        <div id="recompensas">
+            <p>Estrellas ganadas: <span id="estrellas">0</span></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
