@@ -1,6 +1,6 @@
 body {
     font-family: 'Comic Sans MS', cursive, sans-serif;
-    background-image: url('your-image-url-here'); /* Background image */
+    background-image: url('your-image-url-here'); /* Imagen de fondo */
     background-size: cover;
     color: #333;
 }
@@ -13,25 +13,12 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-button {
-    background-color: #ffcc00;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    font-size: 18px;
-    margin: 10px;
-    cursor: pointer;
-    border-radius: 5px;
+.highlight-correct {
+    background-color: lightgreen;
 }
 
-button:hover {
-    background-color: #ff9900;
-}
-
-#feedback {
-    font-size: 20px;
-    margin-top: 20px;
+.highlight-error {
+    background-color: lightcoral;
 }
 
 #progress-bar {
@@ -43,4 +30,15 @@ button:hover {
     height: 20px;
     background-color: #4CAF50;
     width: 0%;
+}
+
+button {
+    background-color: #ffcc00;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 5px;
 }
