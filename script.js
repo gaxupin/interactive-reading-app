@@ -103,3 +103,41 @@ if ('webkitSpeechRecognition' in window) {
 } else {
     feedback.textContent = "Tu navegador no soporta la Web Speech API.";
 }
+// Progress bar initialization
+const progressBar = document.getElementById('progress-bar-fill');
+
+// Web Speech API - Real-Time Feedback
+recognition.onresult = (event) => {
+    const textoLeido = event.results[0][0].transcript;
+    const textoOriginal = textoCuento.textContent;
+
+    // Split into words for comparison
+    const palabrasOriginales = textoOriginal.split(" ");
+    const palabrasLeidas = textoLeido.split(" ");
+    let feedbackText = "";
+    let textoMarcado = "";
+    let correctWords = 0;
+
+    for (let i = 0; i < palabrasOriginales.length; i++) {
+        if (palabrasLeidas[i] && palabrasLeidas[i].toLowerCase() !== palabrasOriginales[i].toLowerCase()) {
+            textoMarcado += `<span class="highlight-error">${palabrasOriginales[i]}</span> `;
+        } else {
+            textoMarcado += `<span class="highlight-correct">${palabrasOriginales[i]}</span> `;
+            correctWords++;
+        }
+    }
+
+    textoCuento.innerHTML = textoMarcado.trim();
+
+    // Update progress bar based on reading accuracy
+    const progressPercentage = (correctWords / palabrasOriginales.length) * 100;
+    progressBar.style.width = progressPercentage + "%";
+
+    if (correctWords === palabrasOriginales.length) {
+        feedback.textContent = "¡Muy bien! Has leído todo correctamente.";
+        estrellas++;
+        estrellasElem.textContent = estrellas;
+    } else {
+        feedback.textContent = "Has cometido algunos errores.";
+    }
+};
