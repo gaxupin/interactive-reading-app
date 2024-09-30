@@ -1,44 +1,31 @@
 body {
-    font-family: 'Comic Sans MS', cursive, sans-serif;
-    background-image: url('your-image-url-here'); /* Imagen de fondo */
-    background-size: cover;
-    color: #333;
-}
-
-#titulo-cuento, #texto-cuento {
-    font-size: 24px;
-    background-color: rgba(255, 255, 255, 0.8);
+    font-family: Arial, sans-serif;
+    text-align: center;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.highlight-correct {
-    background-color: lightgreen;
+.hidden {
+    display: none;
 }
 
-.highlight-error {
-    background-color: lightcoral;
-}
-
-#progress-bar {
-    width: 100%;
-    background-color: #ddd;
-}
-
-#progress-bar-fill {
-    height: 20px;
-    background-color: #4CAF50;
-    width: 0%;
+.option-container {
+    margin-top: 20px;
 }
 
 button {
-    background-color: #ffcc00;
-    border: none;
-    color: white;
     padding: 10px 20px;
-    font-size: 18px;
-    margin: 10px;
+    font-size: 16px;
     cursor: pointer;
-    border-radius: 5px;
+}
+
+#ai-book, #gutenberg-book {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #333;
+}
+
+input, select {
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 16px;
 }
