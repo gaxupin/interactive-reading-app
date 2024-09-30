@@ -6,6 +6,6 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "node-fetch": "^2.6.7"  // Asegúrate de tener esta línea
+    "node-fetch": "^2.6.7"
   }
 }
