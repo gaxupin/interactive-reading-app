@@ -11,29 +11,15 @@ body {
     text-align: center;
 }
 
-#libros {
-    list-style-type: none;
-    padding: 0;
-}
-
-#libros li {
-    background-color: #4caf50;
-    color: white;
-    padding: 10px;
-    margin: 5px 0;
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 10px;
     cursor: pointer;
 }
 
 #lector {
     margin-top: 20px;
-}
-
-#start-reading {
-    background-color: #f44336;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
 }
 
 #feedback {
@@ -43,4 +29,9 @@ body {
 
 #recompensas {
     margin-top: 30px;
+}
+
+.highlight-error {
+    color: red;
+    font-weight: bold;
 }
