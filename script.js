@@ -6,26 +6,30 @@ const estrellasElem = document.getElementById("estrellas");
 let estrellas = 0;
 let recognition;
 
-// Función para generar cuentos usando OpenAI API
-const apiKey = process.env.OPENAI_API_KEY;
-
+// Función para generar cuentos usando el backend de Vercel
 async function generateStory() {
-  const response = await fetch('https://api.openai.com/v1/completions', {
+  const response = await fetch('/api/generate-story', { // Llamada al backend de Vercel
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: "text-davinci-003",
-      prompt: "Tell me a story",
-      max_tokens: 100,
+      prompt: "Escribe una historia para niños sobre animales.", // Prompt enviado al backend
     }),
   });
 
   const result = await response.json();
-  console.log(result);
+  
+  // Si hay un error en la respuesta, lo mostramos
+  if (result.error) {
+    feedback.textContent = "Error generando la historia.";
+  } else {
+    // Mostrar el cuento generado en el DOM
+    textoCuento.textContent = result.story.trim();
+    feedback.textContent = "¡Historia generada!";
+  }
 }
+
 document.getElementById("generate-story").addEventListener('click', generateStory);
 
 // Web Speech API - Reconocimiento de Voz
