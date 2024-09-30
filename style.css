@@ -1,0 +1,46 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#libros {
+    list-style-type: none;
+    padding: 0;
+}
+
+#libros li {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px;
+    margin: 5px 0;
+    cursor: pointer;
+}
+
+#lector {
+    margin-top: 20px;
+}
+
+#start-reading {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+#feedback {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+#recompensas {
+    margin-top: 30px;
+}
