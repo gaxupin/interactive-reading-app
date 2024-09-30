@@ -14,7 +14,7 @@ async function generateStory() {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ prompt: prompt }),  // Asegúrate de que el cuerpo tiene 'prompt'
+    body: JSON.stringify({ prompt: prompt }),
   });
 
   const result = await response.json();
