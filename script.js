@@ -13,7 +13,7 @@ async function generateStory() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer sk-aFDRbDoCJaKT-NxkYKvBw9mTUcw8RVoQssebw4lK-bT3BlbkFJgQMoEh5e9IUOTdmJt73faEZ-f0wmtwqH1tvaT0z94A`
+            'Authorization': `Bearer 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`
         },
         body: JSON.stringify({
             model: "text-davinci-003",
