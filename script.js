@@ -12,8 +12,19 @@ async function fetchBookFromGutenberg() {
         const response = await fetch('https://gutendex.com/books/?search=cuento');
         const data = await response.json();
         const book = data.results[0];
+        
+        // Obtenemos el título
         tituloCuento.textContent = book.title;
-        textoCuento.textContent = book.formats["text/plain"];
+        
+        // Descargamos el texto completo del libro en formato de texto plano
+        const bookTextUrl = book.formats["text/plain; charset=utf-8"];
+        const bookTextResponse = await fetch(bookTextUrl);
+        let bookText = await bookTextResponse.text();
+
+        // Limitar el texto a los primeros 500 caracteres para un niño de 7 años
+        bookText = bookText.substring(0, 500) + '...';
+        textoCuento.textContent = bookText;
+
     } catch (error) {
         console.error("Error al cargar el libro desde Gutenberg:", error);
     }
