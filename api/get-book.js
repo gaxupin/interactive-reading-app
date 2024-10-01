@@ -35,9 +35,10 @@ module.exports = async (req, res) => {
             // Fetch the actual text content of the book
             const bookTextResponse = await fetch(bookTextUrl);
             const bookText = await bookTextResponse.text();
-            
+
+            const lengthIndex = Math.floor(Math.random() * 10);
             // Extract a portion from the middle of the book
-            const middleIndex = Math.floor(bookText.length / 2);
+            const middleIndex = Math.floor(bookText.length / lengthIndex);
             const excerpt = bookText.substring(middleIndex, middleIndex + 500);
             
             // Send the excerpt to the frontend
