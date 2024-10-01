@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
             // Fetch the plain text file of the book
             const bookTextUrl = book.formats["text/plain; charset=utf-8"] || book.formats["text/plain"];
             const intentos = 0;
-            while (!bookTextUrl || intentos === 20) {
+            while (!bookTextUrl || intentos === 200) {
                 const randomIndex = Math.floor(Math.random() * data.results.length);
                 const book = data.results[randomIndex];
                 // Fetch the plain text file of the book
