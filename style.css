@@ -1,31 +1,66 @@
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding: 20px;
-}
-
-.hidden {
-    display: none;
-}
-
-.option-container {
-    margin-top: 20px;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-#ai-book, #gutenberg-book {
-    margin-top: 20px;
-    font-size: 18px;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background-image: url('background.jpg');
+    background-size: cover;
     color: #333;
 }
 
-input, select {
-    margin: 10px 0;
+.app-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+}
+
+#titulo-cuento {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4A90E2;
+}
+
+#texto-cuento {
+    font-size: 18px;
+    line-height: 1.5;
+    margin-top: 10px;
     padding: 10px;
+    background-color: #F7F9FC;
+    border-radius: 5px;
+}
+
+.highlight-correct {
+    background-color: #8BC34A; /* Verde */
+}
+
+.highlight-almost {
+    background-color: #FFEB3B; /* Amarillo */
+}
+
+.highlight-incorrect {
+    background-color: #FF5722; /* Rojo */
+}
+
+button {
+    background-color: #4A90E2;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #357ABD;
+}
+
+#feedback {
     font-size: 16px;
+    margin-top: 20px;
+}
+
+#estrellas {
+    font-weight: bold;
+    font-size: 20px;
+    color: #FBC02D; /* Amarillo */
 }
