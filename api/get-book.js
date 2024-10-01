@@ -14,11 +14,11 @@ module.exports = async (req, res) => {
             const book = data.results[0]; // Choose the first book for now
 
             // Fetch the plain text file of the book
-         /*   const bookTextUrl = book.formats["text/plain; charset=utf-8"] || book.formats["text/plain"];
+            const bookTextUrl = book.formats["text/plain; charset=utf-8"] || book.formats["text/plain"];
             if (!bookTextUrl) {
-                return res.status(400).json({ message: "No se encontró un formato de texto adecuado." });
+                return res.status(400).json({ message: "No se encontró un formato de texto adecuado." + book.formats  });
             }
-*/
+
             // Fetch the actual text content of the book
             const bookTextResponse = await fetch(bookTextUrl);
             const bookText = await bookTextResponse.text();
