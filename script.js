@@ -6,43 +6,30 @@ const estrellasElem = document.getElementById("estrellas");
 let estrellas = 0;
 let recognition;
 
-// Función para cargar libro desde Project Gutenberg
-async function fetchBookFromGutenberg() {
+// Función para cargar libro desde el backend
+async function fetchBookFromBackend(bookId) {
     try {
-        // Hacemos la solicitud para obtener los libros con el tema "children"
-        const response = await fetch('https://gutendex.com/books?search=children&mime_type=text%2Fplain');
+        // Hacemos la solicitud al backend con el bookId correspondiente
+        const response = await fetch(`/api/fetchBook?bookId=${bookId}`);
         const data = await response.json();
 
-        // Verificamos que existen resultados
-        if (data.results.length === 0) {
-            feedback.textContent = "Lo siento, no se encontraron libros adecuados.";
-            return;
-        }
-
-        const book = data.results[0]; // Tomamos el primer libro de la lista
-
-        // Obtenemos el título del libro
-        tituloCuento.textContent = book.title;
-
-        // Obtenemos la URL del formato de texto plano
-        const bookTextUrl = book.formats["text/plain; charset=utf-8"] || book.formats["text/plain"];
-
-        if (!bookTextUrl) {
-            console.error("No se encontró un formato de texto adecuado.");
+        // Verificamos que no hay errores
+        if (data.error) {
             feedback.textContent = "Lo siento, no se pudo cargar el contenido de este libro.";
             return;
         }
 
-        // Descargamos el texto del libro
-        const bookTextResponse = await fetch(bookTextUrl);
-        let bookText = await bookTextResponse.text();
+        const bookText = data.content;
+
+        // Mostrar título (si es necesario, se puede modificar según el backend)
+        tituloCuento.textContent = "Libro de Gutenberg";
 
         // Limitar el texto a una longitud adecuada para un niño de 7 años (ej: 500 caracteres)
-        bookText = bookText.substring(0, 500) + '...';
-        textoCuento.textContent = bookText;
+        const limitedText = bookText.substring(0, 500) + '...';
+        textoCuento.textContent = limitedText;
 
     } catch (error) {
-        console.error("Error al cargar el libro desde Gutenberg:", error);
+        console.error("Error al cargar el libro desde el backend:", error);
         feedback.textContent = "Hubo un problema al cargar el libro. Inténtalo de nuevo más tarde.";
     }
 }
@@ -72,7 +59,7 @@ async function generateStoryWithAI() {
 document.getElementById("load-book").addEventListener('click', () => {
     const bookSource = document.getElementById("book-source").value;
     if (bookSource === 'gutenberg') {
-        fetchBookFromGutenberg();
+        fetchBookFromBackend(1080);  // ID del libro a buscar en el backend
     } else {
         generateStoryWithAI();
     }
@@ -129,4 +116,3 @@ if ('webkitSpeechRecognition' in window) {
 } else {
     feedback.textContent = "Tu navegador no soporta la Web Speech API.";
 }
-
