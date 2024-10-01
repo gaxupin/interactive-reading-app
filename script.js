@@ -9,28 +9,35 @@ let recognition;
 // Función para cargar libro desde Project Gutenberg
 async function fetchBookFromGutenberg() {
     try {
-        const response = await fetch('https://gutendex.com/books/?search=cuento');
+        // Hacemos la solicitud para obtener los libros con el tema "children"
+        const response = await fetch('https://gutendex.com/books?search=children&mime_type=text%2Fplain');
         const data = await response.json();
-        const book = data.results[0];
-        
+
+        // Verificamos que existen resultados
+        if (data.results.length === 0) {
+            feedback.textContent = "Lo siento, no se encontraron libros adecuados.";
+            return;
+        }
+
+        const book = data.results[0]; // Tomamos el primer libro de la lista
+
         // Obtenemos el título del libro
         tituloCuento.textContent = book.title;
 
-        // Verificamos si el formato de texto plano está disponible
-        const bookTextUrl = book.formats["text/plain; charset=utf-8"] || book.formats["text/plain"] || null;
+        // Obtenemos la URL del formato de texto plano
+        const bookTextUrl = book.formats["text/plain; charset=utf-8"] || book.formats["text/plain"];
 
-        // Si no hay formato de texto disponible, mostramos un error adecuado
         if (!bookTextUrl) {
-            console.error("No se encontró un formato de texto disponible para este libro.");
+            console.error("No se encontró un formato de texto adecuado.");
             feedback.textContent = "Lo siento, no se pudo cargar el contenido de este libro.";
             return;
         }
 
-        // Descargamos el texto completo del libro en formato de texto plano
+        // Descargamos el texto del libro
         const bookTextResponse = await fetch(bookTextUrl);
         let bookText = await bookTextResponse.text();
 
-        // Limitar el texto a los primeros 500 caracteres para un niño de 7 años
+        // Limitar el texto a una longitud adecuada para un niño de 7 años (ej: 500 caracteres)
         bookText = bookText.substring(0, 500) + '...';
         textoCuento.textContent = bookText;
 
