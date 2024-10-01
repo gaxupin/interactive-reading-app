@@ -6,30 +6,18 @@ const estrellasElem = document.getElementById("estrellas");
 let estrellas = 0;
 let recognition;
 
-// Función para cargar libro desde el backend
-async function fetchBookFromBackend(bookId) {
+// Fetch Spanish book from backend
+async function fetchBookFromBackend() {
     try {
-        // Hacemos la solicitud al backend con el bookId correspondiente
-        const response = await fetch(`/api/fetchBook?bookId=${bookId}`);
+        const response = await fetch('/api/get-book');
         const data = await response.json();
 
-        // Verificamos que no hay errores
-        if (data.error) {
-            feedback.textContent = "Lo siento, no se pudo cargar el contenido de este libro.";
-            return;
+        if (response.ok) {
+            tituloCuento.textContent = data.title;
+            textoCuento.textContent = data.text; // Display the extracted text in the UI
+        } else {
+            feedback.textContent = data.message || "Error al obtener el libro.";
         }
-
-        let bookText = data.content;
-
-        // Extraer un fragmento desde la mitad del libro
-        const middleIndex = Math.floor(bookText.length / 2);
-        const endIndex = middleIndex + 500;
-        bookText = bookText.substring(middleIndex, endIndex) + '...';
-
-        // Mostrar título (si es necesario, se puede modificar según el backend)
-        tituloCuento.textContent = "Libro en Español de Gutenberg";
-        textoCuento.textContent = bookText;
-
     } catch (error) {
         console.error("Error al cargar el libro desde el backend:", error);
         feedback.textContent = "Hubo un problema al cargar el libro. Inténtalo de nuevo más tarde.";
@@ -111,54 +99,41 @@ document.getElementById("load-book").addEventListener('click', () => {
     }
 });
 
-// Web Speech API - Reconocimiento de Voz y feedback en tiempo real
-if ('webkitSpeechRecognition' in window) {
-    recognition = new webkitSpeechRecognition();
-    recognition.lang = 'es-ES';
-    recognition.interimResults = false;
-    recognition.continuous = true;  // Permitir que escuche continuamente
+// Web Speech API - Word-by-word color feedback
+recognition.onresult = (event) => {
+    const textoLeido = event.results[0][0].transcript;
+    const textoOriginal = textoCuento.textContent.split(" ");
+    const palabrasLeidas = textoLeido.split(" ");
 
-    document.getElementById('start-reading').addEventListener('click', () => {
-        recognition.start();
-    });
+    let textoMarcado = "";
+    let numCorrectas = 0;
 
-    recognition.onresult = (event) => {
-        const textoLeido = event.results[0][0].transcript;
-        const textoOriginal = textoCuento.textContent.split(" ");
-        const palabrasLeidas = textoLeido.split(" ");
-        
-        let textoMarcado = "";
-        let numCorrectas = 0;
-
-        // Comparar las palabras leídas con las originales y colorear el texto original
-        for (let i = 0; i < textoOriginal.length; i++) {
-            if (palabrasLeidas[i] && palabrasLeidas[i].toLowerCase() === textoOriginal[i].toLowerCase()) {
-                textoMarcado += `<span style="color: green">${textoOriginal[i]}</span> `;
-                numCorrectas++;
-            } else if (palabrasLeidas[i]) {
-                textoMarcado += `<span style="color: orange">${textoOriginal[i]}</span> `;
-            } else {
-                textoMarcado += `<span style="color: red">${textoOriginal[i]}</span> `;
-            }
-        }
-
-        textoCuento.innerHTML = textoMarcado.trim();
-
-        // Mostrar feedback basado en el número de palabras correctas
-        const totalPalabras = textoOriginal.length;
-        if (numCorrectas === totalPalabras) {
-            feedback.textContent = "¡Excelente! Has leído todo correctamente.";
-            estrellas++;
+    for (let i = 0; i < textoOriginal.length; i++) {
+        if (palabrasLeidas[i] && palabrasLeidas[i].toLowerCase() === textoOriginal[i].toLowerCase()) {
+            // Correct word (green)
+            textoMarcado += `<span style="color: green">${textoOriginal[i]}</span> `;
+            numCorrectas++;
+        } else if (palabrasLeidas[i]) {
+            // Almost correct (orange)
+            textoMarcado += `<span style="color: orange">${textoOriginal[i]}</span> `;
         } else {
-            feedback.textContent = `Palabras correctas: ${numCorrectas}/${totalPalabras}`;
+            // Incorrect or missed (red)
+            textoMarcado += `<span style="color: red">${textoOriginal[i]}</span> `;
         }
-        estrellasElem.textContent = estrellas;
-    };
+    }
 
-    recognition.onerror = (event) => {
-        console.error('Error de reconocimiento:', event.error);
-        feedback.textContent = "Hubo un error con el reconocimiento de voz. Intenta de nuevo.";
-    };
-} else {
-    feedback.textContent = "Tu navegador no soporta la Web Speech API.";
-}
+    textoCuento.innerHTML = textoMarcado.trim();
+
+    // Provide feedback based on correct words
+    const totalPalabras = textoOriginal.length;
+    if (numCorrectas === totalPalabras) {
+        feedback.textContent = "¡Excelente! Has leído todo correctamente.";
+        estrellas++;
+    } else {
+        feedback.textContent = `Palabras correctas: ${numCorrectas}/${totalPalabras}`;
+    }
+    estrellasElem.textContent = estrellas;
+};
+
+// Event listener for loading the book from backend
+document.getElementById("load-book").addEventListener('click', fetchBookFromBackend);
