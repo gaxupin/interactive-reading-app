@@ -25,8 +25,37 @@ async function fetchBookFromBackend() {
     }
 }
 
-// Event listener to load the book from the backend
-document.getElementById("load-book").addEventListener('click', fetchBookFromBackend);
+
+// Función para generar cuentos usando OpenAI API
+async function generateStoryWithAI() {
+    try {
+        const response = await fetch('/api/generate-story', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                prompt: "Genera un cuento para niños sobre animales en el bosque."
+            })
+        });
+
+        const data = await response.json();
+        tituloCuento.textContent = "Cuento Generado con IA";
+        textoCuento.textContent = data.story;
+    } catch (error) {
+        console.error("Error al generar el cuento con IA:", error);
+    }
+}
+
+// Event listener para cargar o generar libro
+document.getElementById("load-book").addEventListener('click', () => {
+    const bookSource = document.getElementById("book-source").value;
+    if (bookSource === 'gutenberg') {
+        fetchBookFromBackend();
+    } else {
+        generateStoryWithAI();
+    }
+});
 
 // Web Speech API - Word-by-word color feedback
 function initializeSpeechRecognition() {
