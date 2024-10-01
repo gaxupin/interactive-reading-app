@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
             const book = data.results[0]; // Choose the first book for now
 
             // Fetch the plain text file of the book
-            const bookTextUrl = book.formats["text/plain; charset=utf-8"] || book.formats["text/plain"] || book.formats["text/plain; charset=iso-8859-1"];
+            const bookTextUrl = book.formats["text/plain; charset=utf-8"] || book.formats["text/plain"] || book.formats["text/plain; charset=us-ascii"];
             if (!bookTextUrl) {
                 return res.status(400).json({ message: "No se encontró un formato de texto adecuado." + book.formats  });
             }
