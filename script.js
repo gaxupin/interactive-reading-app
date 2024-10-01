@@ -7,14 +7,16 @@ let estrellas = 0;
 let recognition;
 
 // Fetch Spanish book from backend
+// Function to fetch the book from your backend
 async function fetchBookFromBackend() {
     try {
+        // Fetch the book content from the backend
         const response = await fetch('/api/get-book');
         const data = await response.json();
 
         if (response.ok) {
             tituloCuento.textContent = data.title;
-            textoCuento.textContent = data.text; // Display the extracted text in the UI
+            textoCuento.textContent = data.text; // Display the book excerpt
         } else {
             feedback.textContent = data.message || "Error al obtener el libro.";
         }
@@ -23,6 +25,9 @@ async function fetchBookFromBackend() {
         feedback.textContent = "Hubo un problema al cargar el libro. Inténtalo de nuevo más tarde.";
     }
 }
+
+// Event listener to load the book
+document.getElementById("load-book").addEventListener('click', fetchBookFromBackend);
 
 // Función para buscar libros en español para niños
 async function fetchBookFromGutenberg() {
@@ -134,6 +139,3 @@ recognition.onresult = (event) => {
     }
     estrellasElem.textContent = estrellas;
 };
-
-// Event listener for loading the book from backend
-document.getElementById("load-book").addEventListener('click', fetchBookFromBackend);
