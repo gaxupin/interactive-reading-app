@@ -17,8 +17,13 @@ module.exports = async (req, res) => {
 
             // Fetch the plain text file of the book
             const bookTextUrl = book.formats["text/plain; charset=utf-8"] || book.formats["text/plain"];
-            if (!bookTextUrl) {
-                return res.status(400).json({ message: "No se encontró un formato de texto adecuado." + book.formats  });
+            const intentos = 0;
+            while (!bookTextUrl || intentos === 20) {
+                const randomIndex = Math.floor(Math.random() * data.results.length);
+                const book = data.results[randomIndex];
+                // Fetch the plain text file of the book
+                const bookTextUrl = book.formats["text/plain; charset=utf-8"] || book.formats["text/plain"];
+                intentos++;
             }
 
             // Fetch the actual text content of the book
