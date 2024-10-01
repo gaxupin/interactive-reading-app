@@ -13,11 +13,20 @@ async function fetchBookFromGutenberg() {
         const data = await response.json();
         const book = data.results[0];
         
-        // Obtenemos el título
+        // Obtenemos el título del libro
         tituloCuento.textContent = book.title;
-        
+
+        // Verificamos si el formato de texto plano está disponible
+        const bookTextUrl = book.formats["text/plain; charset=utf-8"] || book.formats["text/plain"] || null;
+
+        // Si no hay formato de texto disponible, mostramos un error adecuado
+        if (!bookTextUrl) {
+            console.error("No se encontró un formato de texto disponible para este libro.");
+            feedback.textContent = "Lo siento, no se pudo cargar el contenido de este libro.";
+            return;
+        }
+
         // Descargamos el texto completo del libro en formato de texto plano
-        const bookTextUrl = book.formats["text/plain; charset=utf-8"];
         const bookTextResponse = await fetch(bookTextUrl);
         let bookText = await bookTextResponse.text();
 
@@ -27,6 +36,7 @@ async function fetchBookFromGutenberg() {
 
     } catch (error) {
         console.error("Error al cargar el libro desde Gutenberg:", error);
+        feedback.textContent = "Hubo un problema al cargar el libro. Inténtalo de nuevo más tarde.";
     }
 }
 
