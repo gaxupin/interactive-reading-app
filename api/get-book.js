@@ -4,14 +4,16 @@ module.exports = async (req, res) => {
     if (req.method === 'GET') {
         try {
             // Fetch Spanish children's books from Gutendex
-            const response = await fetch('https://gutendex.com/books/?languages=es&sort=popular&mime_type=text%2F');
+            const response = await fetch('https://gutendex.com/books/?languages=es&sort=ascending&author_year_start=1960&mime_type=text%2F');
             const data = await response.json();
 
             if (data.results.length === 0) {
                 return res.status(404).json({ message: "No se encontraron libros." });
             }
 
-            const book = data.results[0]; // Choose the first book for now
+            // Choose a random book from the results
+            const randomIndex = Math.floor(Math.random() * data.results.length);
+            const book = data.results[randomIndex];
 
             // Fetch the plain text file of the book
             const bookTextUrl = book.formats["text/plain; charset=utf-8"] || book.formats["text/plain"];
