@@ -55,6 +55,7 @@ if ('webkitSpeechRecognition' in window) {
     recognition = new webkitSpeechRecognition();
     recognition.lang = 'es-ES';
     recognition.interimResults = false;
+    recognition.continuous = true;  // Permitir que escuche continuamente
 
     document.getElementById('start-reading').addEventListener('click', () => {
         recognition.start();
@@ -62,34 +63,42 @@ if ('webkitSpeechRecognition' in window) {
 
     recognition.onresult = (event) => {
         const textoLeido = event.results[0][0].transcript;
-        const textoOriginal = textoCuento.textContent;
-
-        // Comparar texto leído con el texto original
-        const palabrasOriginales = textoOriginal.split(" ");
+        const textoOriginal = textoCuento.textContent.split(" ");
         const palabrasLeidas = textoLeido.split(" ");
+        
         let textoMarcado = "";
+        let numCorrectas = 0;
 
-        for (let i = 0; i < palabrasOriginales.length; i++) {
-            if (palabrasLeidas[i] && palabrasLeidas[i].toLowerCase() === palabrasOriginales[i].toLowerCase()) {
-                textoMarcado += `<span class="highlight-correct">${palabrasOriginales[i]}</span> `;
+        // Comparar las palabras leídas con las originales
+        for (let i = 0; i < textoOriginal.length; i++) {
+            if (palabrasLeidas[i] && palabrasLeidas[i].toLowerCase() === textoOriginal[i].toLowerCase()) {
+                textoMarcado += `<span class="highlight-correct">${textoOriginal[i]}</span> `;
+                numCorrectas++;
             } else if (palabrasLeidas[i]) {
-                textoMarcado += `<span class="highlight-almost">${palabrasOriginales[i]}</span> `;
+                textoMarcado += `<span class="highlight-almost">${textoOriginal[i]}</span> `;
             } else {
-                textoMarcado += `<span class="highlight-incorrect">${palabrasOriginales[i]}</span> `;
+                textoMarcado += `<span class="highlight-incorrect">${textoOriginal[i]}</span> `;
             }
         }
 
         textoCuento.innerHTML = textoMarcado.trim();
 
-        // Verificar si hubo errores
-        if (palabrasLeidas.every((palabra, index) => palabra.toLowerCase() === palabrasOriginales[index].toLowerCase())) {
-            feedback.textContent = "¡Muy bien! Has leído todo correctamente.";
+        // Mostrar feedback basado en el número de palabras correctas
+        const totalPalabras = textoOriginal.length;
+        if (numCorrectas === totalPalabras) {
+            feedback.textContent = "¡Excelente! Has leído todo correctamente.";
             estrellas++;
         } else {
-            feedback.textContent = "Has cometido algunos errores.";
+            feedback.textContent = `Palabras correctas: ${numCorrectas}/${totalPalabras}`;
         }
         estrellasElem.textContent = estrellas;
+    };
+
+    recognition.onerror = (event) => {
+        console.error('Error de reconocimiento:', event.error);
+        feedback.textContent = "Hubo un error con el reconocimiento de voz. Intenta de nuevo.";
     };
 } else {
     feedback.textContent = "Tu navegador no soporta la Web Speech API.";
 }
+
