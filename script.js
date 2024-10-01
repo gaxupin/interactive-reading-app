@@ -19,17 +19,63 @@ async function fetchBookFromBackend(bookId) {
             return;
         }
 
-        const bookText = data.content;
+        let bookText = data.content;
+
+        // Extraer un fragmento desde la mitad del libro
+        const middleIndex = Math.floor(bookText.length / 2);
+        const endIndex = middleIndex + 500;
+        bookText = bookText.substring(middleIndex, endIndex) + '...';
 
         // Mostrar título (si es necesario, se puede modificar según el backend)
-        tituloCuento.textContent = "Libro de Gutenberg";
-
-        // Limitar el texto a una longitud adecuada para un niño de 7 años (ej: 500 caracteres)
-        const limitedText = bookText.substring(0, 500) + '...';
-        textoCuento.textContent = limitedText;
+        tituloCuento.textContent = "Libro en Español de Gutenberg";
+        textoCuento.textContent = bookText;
 
     } catch (error) {
         console.error("Error al cargar el libro desde el backend:", error);
+        feedback.textContent = "Hubo un problema al cargar el libro. Inténtalo de nuevo más tarde.";
+    }
+}
+
+// Función para buscar libros en español para niños
+async function fetchBookFromGutenberg() {
+    try {
+        // Solicitud para obtener libros en español y relacionados con niños
+        const response = await fetch('https://gutendex.com/books?search=children&language=es&mime_type=text%2Fplain');
+        const data = await response.json();
+
+        // Verificamos que existen resultados
+        if (data.results.length === 0) {
+            feedback.textContent = "Lo siento, no se encontraron libros adecuados.";
+            return;
+        }
+
+        const book = data.results[0]; // Tomamos el primer libro disponible
+
+        // Obtenemos el título del libro
+        tituloCuento.textContent = book.title;
+
+        // Obtenemos la URL del formato de texto plano
+        const bookTextUrl = book.formats["text/plain; charset=utf-8"] || book.formats["text/plain"];
+
+        if (!bookTextUrl) {
+            console.error("No se encontró un formato de texto adecuado.");
+            feedback.textContent = "Lo siento, no se pudo cargar el contenido de este libro.";
+            return;
+        }
+
+        // Descargamos el texto del libro
+        const bookTextResponse = await fetch(bookTextUrl);
+        let bookText = await bookTextResponse.text();
+
+        // Extraer un fragmento desde la mitad del libro
+        const middleIndex = Math.floor(bookText.length / 2);
+        const endIndex = middleIndex + 500;
+        bookText = bookText.substring(middleIndex, endIndex) + '...';
+        
+        textoCuento.textContent = bookText;
+
+    } catch (error) {
+        console.error("Error al cargar el libro desde Gutenberg:", error);
         feedback.textContent = "Hubo un problema al cargar el libro. Inténtalo de nuevo más tarde.";
     }
 }
@@ -59,7 +105,7 @@ async function generateStoryWithAI() {
 document.getElementById("load-book").addEventListener('click', () => {
     const bookSource = document.getElementById("book-source").value;
     if (bookSource === 'gutenberg') {
-        fetchBookFromBackend(1080);  // ID del libro a buscar en el backend
+        fetchBookFromGutenberg();
     } else {
         generateStoryWithAI();
     }
@@ -84,15 +130,15 @@ if ('webkitSpeechRecognition' in window) {
         let textoMarcado = "";
         let numCorrectas = 0;
 
-        // Comparar las palabras leídas con las originales
+        // Comparar las palabras leídas con las originales y colorear el texto original
         for (let i = 0; i < textoOriginal.length; i++) {
             if (palabrasLeidas[i] && palabrasLeidas[i].toLowerCase() === textoOriginal[i].toLowerCase()) {
-                textoMarcado += `<span class="highlight-correct">${textoOriginal[i]}</span> `;
+                textoMarcado += `<span style="color: green">${textoOriginal[i]}</span> `;
                 numCorrectas++;
             } else if (palabrasLeidas[i]) {
-                textoMarcado += `<span class="highlight-almost">${textoOriginal[i]}</span> `;
+                textoMarcado += `<span style="color: orange">${textoOriginal[i]}</span> `;
             } else {
-                textoMarcado += `<span class="highlight-incorrect">${textoOriginal[i]}</span> `;
+                textoMarcado += `<span style="color: red">${textoOriginal[i]}</span> `;
             }
         }
 
