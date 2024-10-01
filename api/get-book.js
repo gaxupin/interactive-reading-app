@@ -4,7 +4,7 @@ module.exports = async (req, res) => {
     if (req.method === 'GET') {
         try {
             // Fetch Spanish children's books from Gutendex
-            const response = await fetch('https://gutendex.com/books/?topic=children&languages=es&sort=popular&mime_type=text%2Fplain');
+            const response = await fetch('https://gutendex.com/books/?topic=children&languages=es&sort=popular&mime_type=text/plain');
             const data = await response.json();
 
             if (data.results.length === 0) {
