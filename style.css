@@ -29,15 +29,18 @@ body {
 }
 
 .highlight-correct {
-    background-color: #8BC34A; /* Verde */
+    background-color: #8BC34A; /* Verde para palabras correctas */
+    color: white;
 }
 
 .highlight-almost {
-    background-color: #FFEB3B; /* Amarillo */
+    background-color: #FFEB3B; /* Amarillo para palabras casi correctas */
+    color: black;
 }
 
 .highlight-incorrect {
-    background-color: #FF5722; /* Rojo */
+    background-color: #FF5722; /* Rojo para palabras incorrectas */
+    color: white;
 }
 
 button {
