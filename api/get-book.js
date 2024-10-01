@@ -4,7 +4,7 @@ module.exports = async (req, res) => {
     if (req.method === 'GET') {
         try {
             // Fetch Spanish children's books from Gutendex
-            const response = await fetch('https://gutendex.com/books/?topic=children&languages=es&sort=popular&mime_type=text%2F');
+            const response = await fetch('https://gutendex.com/books/?languages=es&sort=popular&mime_type=text%2F');
             const data = await response.json();
 
             if (data.results.length === 0) {
@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
             const book = data.results[0]; // Choose the first book for now
 
             // Fetch the plain text file of the book
-            const bookTextUrl = book.formats["text/plain; charset=utf-8"] || book.formats["text/plain"] || book.formats["text/html; charset=iso-8859-1"];
+            const bookTextUrl = book.formats["text/plain; charset=utf-8"] || book.formats["text/plain"];
             if (!bookTextUrl) {
                 return res.status(400).json({ message: "No se encontró un formato de texto adecuado." + book.formats  });
             }
